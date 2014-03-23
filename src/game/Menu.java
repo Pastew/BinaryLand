@@ -35,7 +35,6 @@ public class Menu extends GameFrame{
 		pointer = new Pointer();
 	}
 
-	@Override
 	protected void input() {
 		while(Keyboard.next()){
 			
@@ -65,7 +64,7 @@ public class Menu extends GameFrame{
 		}
 	}
 
-	@Override
+	
 	protected void render() {
 
 		glClear(GL_COLOR_BUFFER_BIT);

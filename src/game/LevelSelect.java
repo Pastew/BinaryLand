@@ -36,7 +36,6 @@ public class LevelSelect extends GameFrame{
 		listOfLevels = new File("levels").listFiles();
 	}
 
-	@Override
 	protected void input() {
 		while(Keyboard.next()){
 			
@@ -60,7 +59,6 @@ public class LevelSelect extends GameFrame{
 		
 	}
 
-	@Override
 	protected void render() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		

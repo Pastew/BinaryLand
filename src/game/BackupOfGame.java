@@ -18,7 +18,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 
-public class Game extends GameFrame{
+public class BackupOfGame extends GameFrame{
 	private Player player1, player2;
 	private Player[] players = {player1, player2};
 	private float playerSpeed=World.BLOCK_SIZE*0.01f;
@@ -29,7 +29,7 @@ public class Game extends GameFrame{
 	private BlockGrid grid;
 
 
-	public Game(String name) {
+	public BackupOfGame(String name) {
 		super();
 		grid = new BlockGrid(name);	
 		setUpObjects();

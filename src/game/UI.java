@@ -7,53 +7,49 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import org.lwjgl.opengl.Display;
 
 public class UI
 {
-    private Menu game;
-     
+  //  private Menu game;
+	public static int time;
     public UI() 
     {
+    	
         JFrame frame = new JFrame();        
-         
-        // The exit button.
-        JButton button = new JButton("Exit");
-         
+        JLabel timeLabel = new JLabel(Integer.toString(time));
+        JButton button = new JButton("ClickMe");
+        
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                System.exit(0);
+                ++time;
             }
-        });
-         
-        // Create a new canvas and set its size.
+        });    
         Canvas canvas = new Canvas();
-        // Must be 640*480 to match the size of an Env3D window
-        canvas.setSize(900, 900);
-        // This is the magic!  The setParent method attaches the 
-        // opengl window to the awt canvas.
-        try {
-        	
+        canvas.setSize(World.SCREEN_W, World.SCREEN_H+20);
+       
+        try {        	
             Display.setParent(canvas);
-        } catch (Exception e) {
+        } catch (Exception e) { 
+        	System.out.println("Nie uda³o ustawiæ rodzica dla Display, nie pogramy.");
         }
-         
-        // Construct the GUI as normal
-        frame.add(button, BorderLayout.NORTH);
+
         frame.add(canvas, BorderLayout.CENTER);
+        frame.add(timeLabel, BorderLayout.NORTH);
+        frame.add(canvas, BorderLayout.CENTER);
+
          
         frame.pack();
         frame.setVisible(true);
-         
-        // Make sure you run the game, which 
-        // executes on a separate thread.
-        game = new Menu();
+
+        new Menu();
          
     }
      
-  /*  public static void main(String args[]) 
+    public static void main(String args[]) 
     {
         new UI();
-    }*/
+    }
 }

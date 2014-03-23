@@ -16,7 +16,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import java.awt.*;
 
 public abstract class GameFrame {
 
@@ -51,6 +50,5 @@ public abstract class GameFrame {
 	}
 	protected abstract void setUpObjects();
 	
-	protected abstract void input();
-	protected abstract void render();
+
 }
