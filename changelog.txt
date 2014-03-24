@@ -1,0 +1,14 @@
+Zajêcia nr 2. 
+17.03.2014
+	Skonfigurowanie Eclipse do pracy z LWJGL.
+	Stworzenie funkcji wyœwietlaj¹cej mapê, oraz graczy.
+	Obs³uga wczytywania tekstur.
+	Obs³uga poruszania siê (za pomoc¹ strza³ek klawiatury). 
+
+
+Zajêcia nr 3.
+24.03.2014
+	Wczytywanie mapy gry z pliku tekstowego. 
+	Stworzenie graficznego edytora map.  
+	Po³¹czenie gry w LWJGL z menu SWING.  
+	Opracowanie mechanizmu zarz¹dzania kolizjami.

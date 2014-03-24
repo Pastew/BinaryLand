@@ -2,6 +2,7 @@ package game;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -43,13 +44,16 @@ public class UI
          
         frame.pack();
         frame.setVisible(true);
-
+       
         new Menu();
          
     }
      
-    public static void main(String args[]) 
-    {
-        new UI();
+    public static void main(String[] args) {
+        
+                new UI();
+           
     }
+
+
 }
