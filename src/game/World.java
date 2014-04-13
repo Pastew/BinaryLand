@@ -5,7 +5,9 @@ public class World {
 							BLOCKS_HEIGHT=12,
 							
 							BLOCK_SIZE = 50, 
-							PLAYER_SIZE = BLOCK_SIZE;
+							PLAYER_SIZE = BLOCK_SIZE,
+							
+							FPS = 60;
 	
 	public static final int SCREEN_W= World.BLOCKS_WIDTH * World.BLOCK_SIZE, 
 							SCREEN_H= World.BLOCKS_HEIGHT * World.BLOCK_SIZE;	//Width, Height;

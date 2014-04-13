@@ -2,9 +2,7 @@ package game;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glEnd;
@@ -18,6 +16,8 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -27,15 +27,17 @@ public class MapEditor extends GameFrame{
 	private String filePath;
 	private BlockGrid grid;
 	private List<ObjectType> typeList = new LinkedList<ObjectType>(EnumSet.allOf(ObjectType.class));
-
 	
-	public MapEditor(String filePath){
+	public MapEditor(String filePath, JFrame parentFrame){
 		this.filePath = filePath;
-		setUpObjects();
+		setUpObjects(filePath);
 		while(!exit && !Display.isCloseRequested()){
 			input();
 			render();
 		}
+		clearObjects();
+		Display.destroy();
+		parentFrame.setVisible(true);
 	}
 			
 	private ObjectType chosenBlock;	
@@ -53,8 +55,7 @@ public class MapEditor extends GameFrame{
 		
 
 		if(grid.getAt(selector_x, selector_y).getType()== ObjectType.FLOOR && chosenBlock==ObjectType.FLOOR){
-			glBindTexture(GL_TEXTURE_2D , 0);
-			glColor4f(1f, 1f, 1f, 0.2f); //biale pole z 50% przezroczystoscy
+			glColor4f(1f, 1f, 1f, 0.8f); //biale pole z 50% przezroczystoscy
 			
 			glBegin(GL_QUADS);
 				glVertex2i(x, y);
@@ -63,6 +64,7 @@ public class MapEditor extends GameFrame{
 				glVertex2i(x, y2);
 			glEnd();
 			glColor4f(1f, 1f, 1f, 1f);
+		
 		}else if(grid.getAt(selector_x, selector_y).getType() != chosenBlock){
 			
 			glColor4f(1f, 1f, 1f, 0.5f);
@@ -81,7 +83,7 @@ public class MapEditor extends GameFrame{
 		Display.sync(60);
 	}
 	
-	protected void setUpObjects() {
+	protected void setUpObjects(String gridPath) {
 
 		grid = new BlockGrid();		
 		chosenBlock = ObjectType.FLOOR;
@@ -89,7 +91,7 @@ public class MapEditor extends GameFrame{
 		selector_x = 0;
 		selector_y = 0;
 		mouseEnabled = true;
-		grid.load(new File(filePath));
+		grid.load(new File(gridPath));
 	}
 	
 	protected void input(){
@@ -182,5 +184,8 @@ public class MapEditor extends GameFrame{
 		
 	}
 		
+	private void clearObjects() {
+		grid.destroy();
+	}
 	
 }

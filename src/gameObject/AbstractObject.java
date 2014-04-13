@@ -4,38 +4,20 @@ package gameObject;
 
 import game.World;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 
 public abstract class AbstractObject implements GameObject {
 
 	protected float x, y;
 	int size;
-	ObjectType type;
-	Texture texture;
+	ObjectType type;	
 	
 	public AbstractObject(float x, float y, int size, ObjectType type){
 		this.x = x;
 		this.y = y;
 		this.size = size;
 		this.type = type;
-		texture = null;
-		
-		try {
-			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(new File(type.location)));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
-	
-	
+		
 	@Override
 	public void setLocation(float x, float y){ 
 		this.x = x;

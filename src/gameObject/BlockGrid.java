@@ -32,11 +32,12 @@ public class BlockGrid {
 			SAXBuilder builder = new SAXBuilder();
 			Document document = builder.build(loadFile);
 			Element root = document.getRootElement();
+			
 			for(Object block : root.getChildren()){
-				Element e = (Element) block;
-				int x = Integer.parseInt(e.getAttributeValue("x")),
-					y = Integer.parseInt(e.getAttributeValue("y"));
-				blocks[x][y] = new Block(x*BLOCK_SIZE, y*BLOCK_SIZE, BLOCK_SIZE, ObjectType.valueOf(e.getAttributeValue("type")));
+				Element el = (Element) block;
+				int x = Integer.parseInt(el.getAttributeValue("x")),
+					y = Integer.parseInt(el.getAttributeValue("y"));
+				blocks[x][y] = new Block(x*BLOCK_SIZE, y*BLOCK_SIZE, BLOCK_SIZE, ObjectType.valueOf(el.getAttributeValue("type")));
 			}
 		} catch (JDOMException e) {
 			e.printStackTrace();
@@ -90,11 +91,17 @@ public class BlockGrid {
 	public void clear() {
 		for(int x=0 ; x < BLOCKS_WIDTH ; x++){
 			for ( int y = 0 ; y < BLOCKS_HEIGHT ; y++){
-				//blocks[x][y].setType(ObjectType.AIR);
 				blocks[x][y] = new Block(x*BLOCK_SIZE , y*BLOCK_SIZE, BLOCK_SIZE, ObjectType.FLOOR);
 			}
+		}		
+	}
+
+	public void destroy(){
+		for(int x=0 ; x < BLOCKS_WIDTH ; x++){
+			for ( int y = 0 ; y < BLOCKS_HEIGHT ; y++){
+				blocks[x][y].destroy();
+			}
 		}
-		
 	}
 	
 	public void clearUniqueObjects(ObjectType typeToClear) {
