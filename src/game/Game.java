@@ -7,7 +7,12 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 
 import java.awt.Point;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import gameObject.Block;
@@ -29,11 +34,12 @@ public class Game extends GameFrame{
 	private Timer timer;
 	private Point timerLocation;
 	private long lastFrame = getTime(); // [ms]
-
+	private String levelPath;
+	
 	public Game(String gridPath, JFrame parentFrame) {
 		
 		super();
-			
+		levelPath=gridPath;
 		setUpObjects(gridPath);
 		setUpFont();
 		
@@ -59,7 +65,23 @@ public class Game extends GameFrame{
 	}
 	
 	private void win(){
-		setUpObjects("levels/level_002.xml");
+		
+		File[] arrayOfFiles = new File("levels").listFiles();
+		
+		int nextLevelIndex=0;
+		
+		for(int i = 0 ; i < arrayOfFiles.length ; i++){
+			if(levelPath.substring(7).equals( arrayOfFiles[i].getPath().substring(7) ) ){
+				nextLevelIndex= i+1;
+				break;
+			}
+		}
+		
+		if(nextLevelIndex < arrayOfFiles.length){
+			levelPath = arrayOfFiles[nextLevelIndex].getPath();
+			setUpObjects(levelPath);
+		}else
+			exit=true;
 	}
 	
 	protected void render() {

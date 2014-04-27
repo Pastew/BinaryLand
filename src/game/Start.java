@@ -18,6 +18,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import dataModel.Hashing;
 import dataModel.PlayerData;
 
 
@@ -66,10 +67,10 @@ public class Start {
 	      public void actionPerformed(ActionEvent e) {
 	         String command = e.getActionCommand();  
 
-	         if( command.equals( "singIn" ))  {
+	         if( "singIn".equals( command  ))  {
 	        	 infoLabel.setText("");
 	        	 String login = loginField.getText();
-	        	 String pass = passField.getText();
+	        	 String pass = Hashing.hash(passField.getText());
 	        	 
 	        	 playerData=null;
 	        	 for(PlayerData pD : selectPlayers()){
@@ -200,9 +201,10 @@ public class Start {
    public List<PlayerData> selectPlayers() {
        List<PlayerData> players = new LinkedList<PlayerData>();
        try {
-           ResultSet result = stat.executeQuery("SELECT * FROM players");
+           ResultSet result = stat.executeQuery("SELECT * FROM players"); // SELECT 1 FROM players WHERE login=? AND pass=? limit 1
            int id;
            String login, pass;
+           
            while(result.next()) {
                id = result.getInt("player_id");
                login = result.getString("login");
@@ -233,7 +235,7 @@ public class Start {
     		 infoLabel.setText("");
 
 	         String login = loginField.getText();
-        	 String pass = passField.getText();        	 
+        	 String pass = Hashing.hash(passField.getText());        	 
         	 
         	 if( command.equals( "signUp" ) )  {
 	        	 
@@ -259,6 +261,7 @@ public class Start {
 	        	 for(PlayerData pD : selectPlayers())
 	          	   System.out.println(pD);
 	        	 loadLoginPanel();
+	        	 
 	         }
 	         else  if( command.equals( "back" ) ) {
 	        	 loadLoginPanel();

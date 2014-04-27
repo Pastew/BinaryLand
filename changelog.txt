@@ -1,6 +1,6 @@
 Zajêcia nr 2. 
 17.03.2014
-	1) Stworzenie funkcji wyœwietlaj¹cej mapê, oraz graczy.
+	1) Wyœwietlanie mapy, oraz graczy.
 	2) Obs³uga wczytywania tekstur z plików.	
 
 Zajêcia nr 3.
@@ -17,9 +17,9 @@ Zajêcia nr 4.
 Zajecia nr 5.
 7.04.2014
 	1) Dodanie Menu gry (w Swing)
-	2) Dodanie do gry ekranu logowania.
-	3) Zaprojektowanie bazy danych u¿ytkowników. 
+	2) Dodanie do gry ekranu logowania. 
 
 Zajecia nr 6.
 13.04.2014
 	1) Logika animacji obiektów na planszy.
+	2) Zaprojektowanie bazy danych u¿ytkowników. 
