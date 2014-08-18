@@ -82,11 +82,15 @@ public class BlockGrid {
 		return blocks[x][y];
 	}
 	public void draw(){
-		for(int x=0 ; x < BLOCKS_WIDTH ; x++){
-			for ( int y = 0 ; y < BLOCKS_HEIGHT ; y++){
-				blocks[x][y].draw();
+		new Runnable() {
+			public void run() {
+				for (int x = 0; x < BLOCKS_WIDTH; x++) {
+					for (int y = 0; y < BLOCKS_HEIGHT; y++) {
+						blocks[x][y].draw();
+					}
+				}
 			}
-		}
+		}.run();
 	}
 	public void clear() {
 		for(int x=0 ; x < BLOCKS_WIDTH ; x++){

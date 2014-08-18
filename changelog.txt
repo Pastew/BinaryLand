@@ -5,21 +5,44 @@ Zajêcia nr 2.
 
 Zajêcia nr 3.
 24.03.2014
-	1) Obs³uga poruszania siê (za pomoc¹ strza³ek klawiatury). 
-	2) Wczytywanie mapy gry z pliku tekstowego. 
+	3) Obs³uga poruszania siê (za pomoc¹ strza³ek klawiatury). 
+	4) Wczytywanie mapy gry z pliku tekstowego. 
 	  
 Zajêcia nr 4.
 31.03.2014
-	1) Stworzenie graficznego edytora map.
-	2) Po³¹czenie gry w LWJGL z menu SWING.
-	3) Opracowanie mechanizmu zarz¹dzania kolizjami.  
+	5) Stworzenie graficznego edytora map.
+	6) Po³¹czenie gry w LWJGL z menu w SWING.	  
 
 Zajecia nr 5.
 7.04.2014
-	1) Dodanie Menu gry (w Swing)
-	2) Dodanie do gry ekranu logowania. 
+	7) Dodanie Menu gry (w Swing)
+	8) Opracowanie mechanizmu zarz¹dzania kolizjami.
 
 Zajecia nr 6.
-13.04.2014
-	1) Logika animacji obiektów na planszy.
-	2) Zaprojektowanie bazy danych u¿ytkowników. 
+14.04.2014
+	9) Logika animacji obiektów na planszy.
+	10) Zaprojektowanie bazy danych u¿ytkowników. 
+
+Zajecia nr 7.
+21.04.2014
+	11) Dodanie do gry ekranu logowania. 
+	12) Wczytywanie muzyki w tle, oraz dŸwiêków gry.
+
+Zajecia nr 8.
+28.04.2014
+	13) Sprawdzenie aktualizacji gry (po³¹czenie FTP)
+	14) Pobieranie dodatkowych map z serwera (po³¹czenie FTP)
+
+Zajecia nr 9.
+05.05.2014
+	15) Zapisywanie historii gier do pliku log.
+	16) Zapisywanie lokalnej tablicy najlepszych wyników
+	
+Zajecia nr 10.
+12.05.2014
+	17) Wysy³anie najlepszych wyników na serwer
+	18) Liczenie punktów (z u¿yciem klasy TimerTask)
+	
+Zajecia nr 11.
+19.05.2014
+	19) Rysowanie graczy w w¹tkach

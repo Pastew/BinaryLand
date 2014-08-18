@@ -45,19 +45,17 @@ public abstract class GameFrame {
 				Display.create();
 			} catch(LWJGLException e){
 				e.printStackTrace();
-			}	
-		
-		
+			}
 	}
 	protected void setUpOpenGL(){
 		// Inicjalizacja
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-				glOrtho(0, World.SCREEN_W, World.SCREEN_H, 0, 1, -1);
-				glMatrixMode(GL_MODELVIEW);
-				glEnable(GL_TEXTURE_2D);
-				glEnable(GL_BLEND);		
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, World.SCREEN_W, World.SCREEN_H, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);		
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	protected void setUpFont(){
 		try {

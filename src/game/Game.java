@@ -5,66 +5,120 @@ import static game.World.BLOCKS_HEIGHT;
 import static game.World.BLOCKS_WIDTH;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
-
-import java.awt.Point;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-
 import gameObject.Block;
 import gameObject.BlockGrid;
 import gameObject.ObjectType;
 import gameObject.Player;
 
+import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
+import java.util.TimerTask;
+
+import javax.swing.JFrame;
+
+import menu.ArcadeModePanel.Score;
+
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.Timer;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
+import Utils.LocalHighScoresManager;
+import Utils.LogManager;
+import Utils.Timer;
+import Utils.Utils;
  
 public class Game extends GameFrame{
+	//private String playerName;
+	
 	private Player player1, player2;
 	private Block goal;
+	
+	private String levelPath;
 	private BlockGrid grid;
 	private BlockGrid backgroundGrid;
+	
 	private Timer timer;
 	private Point timerLocation;
-	private long lastFrame = getTime(); // [ms]
-	private String levelPath;
 	
-	public Game(String gridPath, JFrame parentFrame) {
-		
+	private long lastFrame = getTime(); // [ms]
+	
+	private Score resultScore;
+	private int score=0;
+	
+	java.util.Timer scoreSubtractor=null;
+	private int levelTime=15;
+	
+	private Audio music;
+	
+	private JFrame parentFrame;
+	
+	public Game(String gridPath, JFrame parentFrame, Score score) {		
 		super();
+		this.resultScore = score;
+		this.parentFrame = parentFrame;
+		this.parentFrame.setVisible(false);
 		levelPath=gridPath;
 		setUpObjects(gridPath);
-		setUpFont();
-		
+		render();
+		Utils.sleep(2000);
 		//petla gry
 		while(!exit && !Display.isCloseRequested()){
+			render();
 			input();
 			update();
-			logic();
-			render();
+			logic();	
 		}
-		
 		clearObjects();
 		Display.destroy();
 		parentFrame.setVisible(true);
 	}
+	public Game(String gridPath, JFrame parentFrame) {
+		this(gridPath, parentFrame, null);
+	}
+	public Game(String gridPath, JFrame parentFrame, Score score, String name){
+		this(gridPath, parentFrame, score);		
+		LogManager.addLog(name, this.score);
+		LocalHighScoresManager.addHighScore(name, this.score);
+	}
 	
 	private void logic(){
+		if(timeIsUp() )
+			gameOver();
+		
 		if(goal.getLocationY() == player1.getLocationY() && goal.getLocationY() == player2.getLocationY() ){	// czy sa na jednym poziomie ( y )
 			if( ( goal.getLocationX() == player1.getLocationX() && goal.getLocationX() == player2.getLocationX() )){ //czy sa na bloczku Goal
 					win();
 			}
-		}	
+		}			
 	}
 	
-	private void win(){
+	class SubstractScore extends TimerTask {
+	    public void run() {
+	       score--; 
+	    }
+	 }
+	private int timeRemaining(){
+		return (int) (levelTime-timer.getTime());
+	}
+	private boolean timeIsUp(){
+		if(timeRemaining() < 0 )
+			return true;
+		else return false;
+	}
+	
+	private void win(){ //wygranie jednego poziomu
+		music.stop();
+		try {
+			Audio gameOverSound = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("sounds/win.wav"));
+			gameOverSound.playAsSoundEffect(1, 1, false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Utils.sleep(4500);
 		
 		File[] arrayOfFiles = new File("levels").listFiles();
 		
@@ -83,6 +137,20 @@ public class Game extends GameFrame{
 		}else
 			exit=true;
 	}
+	private void gameOver(){ //czas uplynal
+		if(resultScore!=null)
+			resultScore.s=score;
+		scoreSubtractor.cancel();
+		music.stop();
+		try {
+			Audio gameOverSound = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("sounds/gameOver.wav"));
+			gameOverSound.playAsSoundEffect(1, 1, false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Utils.sleep(4500);
+		exit=true;
+	}
 	
 	protected void render() {
 		glClear(GL_COLOR_BUFFER_BIT );
@@ -92,25 +160,48 @@ public class Game extends GameFrame{
 		player1.draw();
 		player2.draw();
 		
-		font.drawString(timerLocation.x, timerLocation.y,  String.format("%.1f", timer.getTime()) );
-		font.drawString(200, 50, "lol");
-
+		font.drawString(timerLocation.x-300, timerLocation.y,  "TIME LEFT: "+ timeRemaining() );
+		font.drawString(timerLocation.x+100, timerLocation.y,  "SCORE: " + Integer.toString(score));
+		
 		Display.update();
 		Display.sync(World.FPS);
-		Timer.tick();
+		
 	}
-	
 	void update(){		
 		int delta = getDelta();
+		System.out.println(delta);
 		player1.updateLocation(delta);
 		player2.updateLocation(delta);
 	}
-	
 	protected void setUpObjects(String gridPath) {	
-		grid = new BlockGrid(gridPath);
-		timerLocation = new Point(World.SCREEN_W/2-20, 5);
-		timer = new Timer();		
 		
+		//czcionka
+		setUpFont();
+		
+		//============== PUNKTY ====================
+		score += 108;
+		
+		if(scoreSubtractor==null){
+			scoreSubtractor = new java.util.Timer();
+			scoreSubtractor.schedule(new SubstractScore(), 0, 500);
+		}
+		
+		grid = new BlockGrid(gridPath);
+		
+		//=========== TIMER ===================
+		timer = new Timer();
+		timerLocation = new Point(World.SCREEN_W/2-20, 5);
+		
+		//============= MUZYKA ================
+		try {
+			music = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("sounds/music.wav"));
+			music.playAsMusic(1,1,false);
+		} catch (IOException e) {
+			System.out.println("Nie da sie za³adowaæ muzyki");
+			e.printStackTrace();
+		}
+		
+		//============= MAPA ==================
 		backgroundGrid = new BlockGrid();
 		for(int x=0 ; x < BLOCKS_WIDTH ; x++){
 			for ( int y = 0 ; y < BLOCKS_HEIGHT ; y++){
@@ -132,7 +223,6 @@ public class Game extends GameFrame{
 			}
 		}// end for		
 	}
-	
 	protected void input(){
 		player1.stop();
 		player2.stop();		
@@ -143,7 +233,7 @@ public class Game extends GameFrame{
 					player2.goLeft(grid.blocks[player2.getLocationX()-1] [player2.getLocationY()]);
 					return;
 				}else
-				
+									
 				// LEWO				
 				if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) {
 					player1.goLeft(grid.blocks[player1.getLocationX()-1] [player1.getLocationY()]);
@@ -165,23 +255,27 @@ public class Game extends GameFrame{
 					return;
 				}else
 				{
+					player1.stop();
+					player2.stop();
 					player1.stopAnimation();
 					player2.stopAnimation();
-				}
-				
+				}				
 			while(Keyboard.next()){
 			//wyjscie z gry
 				if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE){
+					//gameOver();
 					exit=true;
 				}
 				if(Keyboard.getEventKey() == Keyboard.KEY_Q){
-					win();
-				}
-				
+					//win();
+				}				
 			}
 	}
 	
-	private void clearObjects() {
+	private void clearObjects() {		
+		if(music.isPlaying())
+			music.stop();
+		//AL.destroy();
 		player1.destroy();
 		player2.destroy();	
 		grid.destroy();
@@ -192,7 +286,6 @@ public class Game extends GameFrame{
 	private long getTime(){
 		return (Sys.getTime()*1000)/Sys.getTimerResolution();
 	}
-	
 	private int getDelta(){
 		long currentTime = getTime();
 		int delta = (int) (currentTime - lastFrame);

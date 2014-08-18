@@ -27,7 +27,4 @@ public abstract class AbstractStaticObject extends AbstractObject{
 			e.printStackTrace();
 		}
 	}
-		
-	
-
 }

@@ -7,15 +7,14 @@ import game.World;
 
 
 public class Player extends AbstractMoveableObject{
-	
-	private float speed=World.BLOCK_SIZE*0.01f;
+		
+	private final float speed=World.BLOCK_SIZE*0.01f;
 	
 	private Animation stayAnimation, 
 					  goRightAnimation,
 					  goLeftAnimation,
 					  goUpAnimation,
-					  goDownAnimation;
-	 
+					  goDownAnimation;	 
 	
 	
 	public Player(float x, float y, int size, ObjectType type) {
@@ -27,14 +26,34 @@ public class Player extends AbstractMoveableObject{
 		goDownAnimation = new Animation(spriteSheet, 2,0,3,0, true, animationSpeed, true);
 
 		animation = stayAnimation;
-		}
+		
+		Thread live = new Thread(){
+			@Override
+			public void run(){
+				while(true){
+					if(right) {setDX(speed);System.out.println("ide w prawo");}
+					if(up) setDY(-speed);
+					if(down)setDY(speed);
+					if(left)setDX(-speed);
+					Thread.yield();
+					/*try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}*/
+				}
 
-	
+			}		
+		};
+		live.start();
+	}
+
 	public void goRight(GameObject rightBlock){
 		if (animation!=goRightAnimation) animation = goRightAnimation; 
 		
 		if( !(rightBlock.getType() != ObjectType.FLOOR && (this.intersects(rightBlock)))) {					
-			setDX(speed);
+			right=true;
 		}
 		adjustHeight(rightBlock.getType());
 	}
@@ -43,7 +62,7 @@ public class Player extends AbstractMoveableObject{
 		if (animation!=goLeftAnimation) animation = goLeftAnimation;
 		
 		if( !(leftBlock.getType() != ObjectType.FLOOR && (this.intersects(leftBlock)))){					
-			this.setDX(-speed);					
+			left=true;					
 		}
 		adjustHeight(leftBlock.getType());
 	}
@@ -52,7 +71,7 @@ public class Player extends AbstractMoveableObject{
 		if (animation!=goUpAnimation) animation = goUpAnimation;
 		
 		if(!(topBlock.getType() != ObjectType.FLOOR && (intersects(topBlock)))){			
-			this.setDY(-speed);
+			up=true;
 		}
 		adjustWidth(topBlock.getType());
 	}
@@ -61,11 +80,11 @@ public class Player extends AbstractMoveableObject{
 		if (animation!=goDownAnimation) animation = goDownAnimation;
 		
 		if(!(bottomBlock.getType() != ObjectType.FLOOR && (this.intersects(bottomBlock)))){
-			this.setDY(speed);							
+			down=true;							
 		}
 		adjustWidth(bottomBlock.getType());
 	}
-	
+
 	private void adjustHeight(ObjectType BlockType){
 		if( y == getLocationY()*World.BLOCK_SIZE) return;
 		else if( y > (getLocationY() * World.BLOCK_SIZE +4) &&  BlockType == ObjectType.FLOOR)
@@ -88,12 +107,13 @@ public class Player extends AbstractMoveableObject{
 		this.animation = stayAnimation;
 	}
 
-
-	
-	
 	@Override
- 	public void draw() {		
-		animation.draw(x, y, World.PLAYER_SIZE, World.PLAYER_SIZE);
+ 	public void draw() {
+		new Runnable() {
+			public void run() {
+				animation.draw(x, y, World.PLAYER_SIZE, World.PLAYER_SIZE);
+			}
+		}.run();
 	}
 	public void destroy(){
 		try {

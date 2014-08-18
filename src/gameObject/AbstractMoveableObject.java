@@ -8,6 +8,11 @@ import org.newdawn.slick.SpriteSheet;
 
 public abstract class AbstractMoveableObject extends AbstractObject implements MoveableObject {
 
+	protected boolean 	up=false,
+						down=false,
+						left=false,
+						right=false;
+	
 	protected float dx, dy;	
 	protected Animation animation;
 	int animationSpeed;
@@ -29,8 +34,15 @@ public abstract class AbstractMoveableObject extends AbstractObject implements M
 	
 		public float getDX(){ return dx; }
 		public float getDY(){ return dy; }
-		public void setDX(float dx){ stop(); this.dx = dx; }
-		public void setDY(float dy){ stop(); this.dy = dy; }
+		public void setDX(float dx){ this.dx = dx; }
+		public void setDY(float dy){ this.dy = dy; }
 			
-		public void stop(){ this.dx = 0 ; this.dy=0;}
+		public void stop(){ 
+			this.dx = 0 ; 
+			this.dy=0;
+			up=false;
+			down=false;
+			left=false;
+			right=false;
+		}
 }
